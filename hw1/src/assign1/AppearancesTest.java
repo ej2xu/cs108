@@ -32,6 +32,4 @@ public class AppearancesTest {
 		assertEquals(2, Appearances.sameCount(a, Arrays.asList(1, 3, 3, 1)));
 		assertEquals(1, Appearances.sameCount(a, Arrays.asList(1, 3, 3, 1, 1)));
 	}
-	
-	// TODO Add more tests
 }
