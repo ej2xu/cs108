@@ -136,7 +136,7 @@ public class Piece {
 		if (!(obj instanceof Piece)) return false;
 		Piece other = (Piece)obj;
 		
-		return (body == other.body);
+		return  Arrays.equals(body, other.body);
 	}
 
 
