@@ -97,9 +97,10 @@ public class BoardTest {
 	@Test
     public void testDropPiece(){
         b = new Board(10, 10);
-        int y = 16;
-        while (b.place(pyr1, 5, b.dropHeight(pyr1, 5)) != Board.PLACE_OUT_BOUNDS) {
-        	System.out.println(b.toString());
+        int y = 3;
+        while (b.place(sRotated, 5, b.dropHeight(sRotated, 5)) != Board.PLACE_OUT_BOUNDS) {
+        	assertEquals(y, b.getMaxHeight());
+        	y += 2;
         	b.commit();
         }
     }
