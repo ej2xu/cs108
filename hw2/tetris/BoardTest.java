@@ -7,6 +7,7 @@ import org.junit.*;
 public class BoardTest {
 	Board b;
 	Piece pyr1, pyr2, pyr3, pyr4, s, sRotated;
+	Piece l;
 
 	// This shows how to build things in setUp() to re-use
 	// across tests.
@@ -56,5 +57,75 @@ public class BoardTest {
 	// place, clearRows, undo, place ... checking a few col/row/max
 	// numbers that the board looks right after the operations.
 	
+	@Test
+    public void testClearRows() {
+
+        b.clearRows();
+
+        assertEquals(0, b.getColumnHeight(0));
+        assertEquals(1, b.getColumnHeight(1));
+        assertEquals(1, b.getMaxHeight());
+        assertEquals(1, b.getRowWidth(0));
+        assertEquals(0, b.getRowWidth(1));
+        b.commit();
+        b.place(pyr2, 1, 0);
+
+        b.clearRows();
+
+        Piece[] pieces = Piece.getPieces();
+        l = pieces[Piece.L2];
+        l = l.fastRotation();
+        l = l.fastRotation();
+
+        b.commit();
+        b.place(l,0, b.dropHeight(l,0));
+
+        b.clearRows();
+        assertEquals(0, b.getColumnHeight(1));
+        assertEquals(0, b.getMaxHeight());
+        assertEquals(0, b.getRowWidth(0));
+    }
+
+	@Test
+    public void testUndo(){
+        b.undo();
+        assertEquals(0, b.getColumnHeight(1));
+        assertEquals(0, b.getMaxHeight());
+        assertEquals(0, b.getRowWidth(0));
+    }
 	
+	@Test
+    public void testDropPiece(){
+        b = new Board(10, 10);
+        int y = 16;
+        while (b.place(pyr1, 5, b.dropHeight(pyr1, 5)) != Board.PLACE_OUT_BOUNDS) {
+        	System.out.println(b.toString());
+        	b.commit();
+        }
+    }
+	
+	@Test
+    public void testCommits(){
+        b = new Board(3, 6);
+        b.commit();
+        b.place(s, 0, b.dropHeight(s,0));
+        b.clearRows();
+        b.clearRows();
+
+        b.commit();
+        b.place(s,0,b.dropHeight(s,0));
+        b.clearRows();
+
+        b.commit();
+        b.place(s,0,b.dropHeight(s,0));
+        b.clearRows();
+
+        b.commit();
+        assertEquals(5, b.getColumnHeight(0));
+        assertEquals(6, b.getColumnHeight(1));
+        assertEquals(6, b.getMaxHeight());
+        assertEquals(2, b.getRowWidth(0));
+        assertEquals(2, b.getRowWidth(1));
+        assertEquals(2, b.getRowWidth(2));
+    }	
 }
