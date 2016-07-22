@@ -206,6 +206,7 @@ public class Piece {
 			curr.next = curr.computeNextRotation();
 			curr = curr.next;
 		}
+		curr.next = root.next;
 		return root;
 	}
 	

@@ -81,7 +81,7 @@ public class Board	{
 						if (yHeights[i] > yMaxHeight) yMaxHeight = yHeights[i];
 					}
 			if (!Arrays.equals(heights, yHeights) || !Arrays.equals(widths, yWidths) || !(maxHeight == yMaxHeight))
-				 throw new RuntimeException("place commit problem");
+				 throw new RuntimeException("insane board problem");
 		}
 	}
 	
@@ -206,10 +206,18 @@ public class Board	{
             for(int col = 0; col < width; col++)
                 grid[col][toRow] = false;
             toRow++;
-        }
-		for(int col = 0; col < width; col++)
-			heights[col] -= rowsCleared;
+        }		
+
 		maxHeight -= rowsCleared;
+		// recalculate heights for possible existing gap due to row clears
+		Arrays.fill(heights, 0);
+		for (int j = maxHeight - 1; j >= 0; j--) {
+			for (int i = 0; i < width; i++) {				
+				if (grid[i][j]) {
+					if (j + 1 > heights[i]) heights[i] = j + 1;
+				}
+			}
+		}
 		
 		sanityCheck();
 		return rowsCleared;

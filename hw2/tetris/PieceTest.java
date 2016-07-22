@@ -127,7 +127,7 @@ public class PieceTest {
         assertTrue(pieces[Piece.PYRAMID].equals(pyr1));
 
         //rotating pieces
-        assertTrue(pieces[Piece.L1].fastRotation().equals(lRotated1));
+        assertTrue(pieces[Piece.L1].fastRotation().fastRotation().fastRotation().fastRotation().fastRotation().equals(pieces[Piece.L1].fastRotation()));
         assertTrue(pieces[Piece.S1].fastRotation().equals(sRotated));
         assertFalse(pieces[Piece.S1].fastRotation().equals(s));
         assertFalse(pieces[Piece.S1].equals(sRotated));
