@@ -200,13 +200,15 @@ public class Piece {
 	 to the first piece.
 	*/
 	private static Piece makeFastRotations(Piece root) {
+		Piece pre = root;
 		Piece curr = root.computeNextRotation();
 		root.next = curr;
 		while (!root.equals(curr)) {
+			pre = curr;
 			curr.next = curr.computeNextRotation();
 			curr = curr.next;
 		}
-		curr.next = root.next;
+		pre.next = root;
 		return root;
 	}
 	
