@@ -1,12 +1,20 @@
 package assign3;
 
 import java.util.*;
+import java.lang.StringBuilder;
 
 /*
  * Encapsulates a Sudoku grid to be solved.
  * CS108 Stanford.
  */
 public class Sudoku {
+	private int[][] grid;
+	private int[][] gridSol;
+	private boolean isSolved;
+	int solCount;
+	private long timeElapsed;
+	private List<Spot> spots;
+	
 	// Provided grid data for main/testing
 	// The instance variable strategy is up to you.
 	
@@ -135,31 +143,123 @@ public class Sudoku {
 		System.out.println(sudoku.getSolutionText());
 	}
 	
-	
+	private class Spot implements Comparable<Spot> {
+		private int row;
+		private int col;
+		private int legalCount;
+		
+		public Spot(int r, int c) {
+			row = r;
+			col = c;
+			legalCount = getLegal().size();
+		}
+		
+		public void set(int val) {
+			grid[row][col] = val;
+		}
+		
+		private HashSet<Integer> getLegal() {
+			HashSet<Integer> lvs = new HashSet<Integer>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
+			for (int i=0; i<SIZE; i++) {
+				lvs.remove(grid[row][i]);
+				lvs.remove(grid[i][col]);
+				lvs.remove(grid[(row/PART)*PART + i / PART][(col/PART)*PART + i % PART]);
+			}
+			return lvs;
+		}
+		
+		@Override
+		public int compareTo(Spot other) {
+			return legalCount - other.legalCount;
+		}
+	}
 	
 
 	/**
 	 * Sets up based on the given ints.
 	 */
 	public Sudoku(int[][] ints) {
-		// YOUR CODE HERE
+		assert(ints.length == SIZE && ints[0].length == SIZE);
+		grid = ints;
+		gridSol = new int[SIZE][SIZE];
+		isSolved = false;
 	}
 	
+	public Sudoku(String text) {
+		this(textToGrid(text));
+	}
 	
+	@Override
+	public String toString() {		
+		return gridToText(grid);
+	}
+	
+	private static String gridToText(int[][] grid) {
+		StringBuilder gridTxt = new StringBuilder();
+		for(int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++)
+				gridTxt.append(grid[i][j]);
+			gridTxt.append('\n');
+		}
+		return gridTxt.toString();
+	}
+	
+	private void makeSpots() {
+		spots = new ArrayList<Spot>();
+		for (int i = 0; i < SIZE; i++)
+			for (int j = 0; j < SIZE; j++)
+				if (grid[i][j] == 0) spots.add(new Spot(i,j));
+		Collections.sort(spots);
+	}
 	
 	/**
 	 * Solves the puzzle, invoking the underlying recursive search.
 	 */
 	public int solve() {
-		return 0; // YOUR CODE HERE
+		long startTime = System.currentTimeMillis();
+		makeSpots();
+		solCount = 0;
+		recSolve(0);
+		long endTime = System.currentTimeMillis();
+		timeElapsed = endTime - startTime;
+		return solCount;
+	}
+	
+	private void recSolve(int pos) {
+		if (solCount >= MAX_SOLUTIONS) return;
+		
+		if (pos == spots.size()) {
+			if (solCount == 0) {
+				isSolved = true;
+				saveSolution();
+			}
+			solCount++;
+			return;
+		}
+		
+		Spot curSpot = spots.get(pos);
+		for (int val : curSpot.getLegal()) {
+			curSpot.set(val);
+			recSolve(pos + 1);
+		}
+		curSpot.set(0);
+		return;
+	}
+	
+	private void saveSolution() {
+		for (int i = 0; i < SIZE; i++)
+			System.arraycopy(grid[i], 0, gridSol[i], 0, SIZE);
 	}
 	
 	public String getSolutionText() {
-		return ""; // YOUR CODE HERE
+		if (!isSolved) solve();
+		if (solCount == 0) return "";
+		else return gridToText(gridSol);
 	}
 	
 	public long getElapsed() {
-		return 0; // YOUR CODE HERE
+		if (!isSolved) solve();
+		return timeElapsed;
 	}
 
 }
