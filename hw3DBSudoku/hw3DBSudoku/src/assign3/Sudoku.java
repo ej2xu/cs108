@@ -11,7 +11,7 @@ public class Sudoku {
 	private int[][] grid;
 	private int[][] gridSol;
 	private boolean isSolved;
-	int solCount;
+	private int solCount;
 	private long timeElapsed;
 	private List<Spot> spots;
 	
@@ -179,7 +179,6 @@ public class Sudoku {
 	 * Sets up based on the given ints.
 	 */
 	public Sudoku(int[][] ints) {
-		assert(ints.length == SIZE && ints[0].length == SIZE);
 		grid = ints;
 		gridSol = new int[SIZE][SIZE];
 		isSolved = false;
@@ -197,8 +196,10 @@ public class Sudoku {
 	private static String gridToText(int[][] grid) {
 		StringBuilder gridTxt = new StringBuilder();
 		for(int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++)
+			for (int j = 0; j < SIZE; j++) {
 				gridTxt.append(grid[i][j]);
+				gridTxt.append(' ');
+			}
 			gridTxt.append('\n');
 		}
 		return gridTxt.toString();

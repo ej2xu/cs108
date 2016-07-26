@@ -10,9 +10,7 @@ import java.awt.event.*;
 
  public class SudokuFrame extends JFrame {
 	private JTextArea puzzle; 
-	private JTextArea solution; 
-	private JButton check;
-	private JCheckBox autoCheck;
+	private JTextArea solution;
 	
 	public SudokuFrame() {
 		super("Sudoku Solver");
@@ -26,23 +24,57 @@ import java.awt.event.*;
 		
 		JPanel control = new JPanel();
 		control.setLayout(new BoxLayout(control, BoxLayout.X_AXIS));
-		check = new JButton("Check");
-		autoCheck = new JCheckBox("Auto Check");
+		JButton check = new JButton("Check");
+		JCheckBox autoCheck = new JCheckBox("Auto Check");
+		autoCheck.setSelected(true);
 		control.add(check);
 		control.add(autoCheck);
+		
+		check.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				solvePuzzle();
+			}
+		});
+		
+		puzzle.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				if(autoCheck.isSelected()) solvePuzzle();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				if(autoCheck.isSelected()) solvePuzzle();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				if(autoCheck.isSelected()) solvePuzzle();
+			}
+		});
 		
 		add(puzzle, BorderLayout.CENTER);
 		add(solution, BorderLayout.EAST);
 		add(control, BorderLayout.SOUTH);
-		
-		// Could do this:
-		// setLocationByPlatform(true);
+
+		setLocationByPlatform(true);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}
 	
+	private void solvePuzzle() {
+		String solText = "";
+		try {
+			Sudoku s = new Sudoku(puzzle.getText());
+			int solCount = s.solve();
+			if (solCount != 0) {
+				solText = s.getSolutionText();
+				solText += "solutions:" + solCount + '\n' + "elapsed:" + s.getElapsed() + "ms\n";
+			}
+		} catch (Exception ex) {
+			solText = "Parsing problem";
+		}
+		solution.setText(solText);
+	}
 	
 	public static void main(String[] args) {
 		// GUI Look And Feel
