@@ -82,7 +82,7 @@ public class JBrainTetris extends JTetris {
                 board.undo();
                 move = brain.bestMove(board, super.currentPiece, board.getHeight()-TOP_SPACE, move);
             }
-            if(move != null){
+            if(move != null) {
                 if (!move.piece.equals(currentPiece))
                 	super.tick(ROTATE);
                 if (move.x < currentX)
