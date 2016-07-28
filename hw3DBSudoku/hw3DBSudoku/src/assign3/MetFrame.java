@@ -71,16 +71,6 @@ class MetFrame extends JFrame {
 			
 		JButton searButton = new JButton("Search");
 		buttons.add(searButton);
-		searButton.addActionListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					String result = JOptionPane.showInputDialog("What name for the new column?");
-					if (result != null) {
-						model.addColumn(result);
-					}
-				}
-			}
-		);
 		
 		buttons.add(new JLabel("Search options"));
 		JComboBox<String> popPulldown = new JComboBox(new String[]{POPULATION_LAR, POPULATION_LEQ});
