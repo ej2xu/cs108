@@ -32,7 +32,8 @@ public class MetTableModel extends AbstractTableModel {
 			e.printStackTrace();
 		}
 	}
-
+	
+	@Override
 	public String getColumnName(int col) {
 		String name = "";
 		if (rsmd != null) {
@@ -44,7 +45,8 @@ public class MetTableModel extends AbstractTableModel {
 		}
         return name;
 	}
-
+	
+	@Override
 	public int getColumnCount() {
 		int count = 0;
 		if (rsmd != null) {
@@ -56,7 +58,8 @@ public class MetTableModel extends AbstractTableModel {
 		}
 		return count;
 	}
-
+	
+	@Override
 	public int getRowCount() {
 		int count = 0;
 		if (rs != null) {
@@ -69,7 +72,8 @@ public class MetTableModel extends AbstractTableModel {
 		}
 		return count;
 	}
-
+	
+	@Override
 	public Object getValueAt(int row, int col) {
 		Object result = null;
 		if (rs != null) {
