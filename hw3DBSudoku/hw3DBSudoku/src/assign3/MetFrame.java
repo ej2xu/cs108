@@ -19,7 +19,6 @@ class MetFrame extends JFrame {
     private static final String EXACT_MATCH = "Exact Match";
     private static final String PARTIAL_MATCH = "Partial Match";
 	private MetTableModel model;
-	private JTable table;
 	
 	JTextField metText;
 	JTextField conText;
@@ -28,7 +27,7 @@ class MetFrame extends JFrame {
 	public MetFrame(String title) {
 		super(title);
 		model = new MetTableModel();
-		table = new JTable(model);
+		JTable table = new JTable(model);
 		
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setPreferredSize(new Dimension(300,200));
@@ -60,9 +59,9 @@ class MetFrame extends JFrame {
 		addButton.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					String popNum = popText.getText();
 					String city = metText.getText();
 					String region = conText.getText();
+					String popNum = popText.getText();
 					
 					model.addData(city, region, popNum);
 				}
@@ -76,15 +75,25 @@ class MetFrame extends JFrame {
 		JComboBox<String> popPulldown = new JComboBox(new String[]{POPULATION_LAR, POPULATION_LEQ});
 		JComboBox<String> mtPulldown = new JComboBox(new String[]{EXACT_MATCH, PARTIAL_MATCH});
 		buttons.add(popPulldown);
-		buttons.add(mtPulldown);
+		buttons.add(mtPulldown);	
+		
+		searButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                boolean larger = popPulldown.getSelectedItem().equals(POPULATION_LAR);
+                boolean exact = mtPulldown.getSelectedItem().equals(EXACT_MATCH);
+                model.searchData(metText.getText(), conText.getText(), popText.getText(), larger, exact);
+            }
+        });
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}
 	
-	static public void main(String[] args) 
-	{
+	static public void main(String[] args) {
+		try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) { }
 		new MetFrame("Metropolis Viewer");
 	}
 }

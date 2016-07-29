@@ -83,8 +83,38 @@ public class MetTableModel extends AbstractTableModel {
 		return result;
 	}
 
-	public void addColumn(String name) {
-		fireTableStructureChanged();
+	public void searchData(String city, String region, String popNum, boolean larger, boolean exact) {
+		try {
+			query = "SELECT * FROM metropolises";
+			boolean cEmp = city.isEmpty();
+			boolean rEmp = region.isEmpty();
+			boolean pEmp = popNum.isEmpty();
+			if (!cEmp||!rEmp||!pEmp) {
+				query += " WHERE"; 
+			
+				String opForPop = larger ? " > " : " <= ";
+				String opForMatch = exact ? " = " : " LIKE ";
+				if (!exact) {
+					if (!cEmp) city = "\"%" + city + "%\"";
+					if (!rEmp) region = "\"%" + region + "%\"";
+				} else {
+					if (!cEmp) city = "\"" + city + "\"";
+					if (!rEmp) region = "\"" + region + "\"";
+				}
+				
+				query += (pEmp? "" : (" population" + opForPop + popNum));
+				query += (!pEmp && !cEmp) ? " AND" : "";
+				query += (cEmp? "" : (" metropolis" + opForMatch + city));
+				query += ((!pEmp || !cEmp) && !rEmp) ? " AND" : "";
+				query += (rEmp? "" : (" continent" + opForMatch + region));
+			}
+			query += ";";
+			rs = stmt.executeQuery(query);
+			rsmd = rs.getMetaData();
+			fireTableStructureChanged();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void addData(String city, String region, String popNum) {
@@ -99,5 +129,5 @@ public class MetTableModel extends AbstractTableModel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 }
