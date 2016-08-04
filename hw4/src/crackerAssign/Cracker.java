@@ -1,6 +1,7 @@
 package crackerAssign;
 
-import java.security.*; 
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
 
 public class Cracker {
 	// Array of chars used to produce strings
@@ -34,6 +35,18 @@ public class Cracker {
 			result[i/2] = (byte) Integer.parseInt(hex.substring(i, i+2), 16);
 		}
 		return result;
+	}
+	
+	private String genHash(String pw) {
+			MessageDigest md;
+			try {
+				md = MessageDigest.getInstance("SHA");
+				md.update(pw.getBytes());
+			    return hexToString(md.digest());	
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}		  	     	 
+		return null;
 	}
 	
 	public static void main(String[] args) {
