@@ -5,8 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
-import bankAssign.Transaction; 
-
 public class Cracker {
 	// Array of chars used to produce strings
 	public static final char[] CHARS = "abcdefghijklmnopqrstuvwxyz0123456789.,-!".toCharArray();	
@@ -100,6 +98,7 @@ public class Cracker {
 				byte[] hashBytes = hexToArray(args[0]);
 						
 				latch = new CountDownLatch(numOfWorkers);
+				
 				int step = MAX_WORKERS / numOfWorkers;
 				for (int i = 0; i < numOfWorkers; i++)
 					new Worker(i, step, maxLength, args[0], hashBytes).start();
