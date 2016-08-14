@@ -32,6 +32,6 @@ public class LoginListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event)  { 
          AccountManager am = new AccountManager();
          ServletContext sc = event.getServletContext();
-         sc.setAttribute("Account Manager", am);
+         sc.setAttribute(AccountManager.AM_NAME, am);
     }
 }

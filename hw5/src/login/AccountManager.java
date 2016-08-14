@@ -3,6 +3,7 @@ import java.util.*;
 
 public class AccountManager {
 	private Map<String, String> db;
+	public static final String AM_NAME = "Account Manager";
 	
 	public AccountManager() {
 		db = new HashMap<String, String>();
